@@ -10,6 +10,8 @@
     margin-left: auto;
     background-color: #dcf8c6;
     border-top-right-radius: 0;
+    max-width: 70%;
+
 }
 
 .chat__body__receiver .left__triangle{

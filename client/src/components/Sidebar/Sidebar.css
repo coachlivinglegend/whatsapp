@@ -8,23 +8,13 @@
 .sidebar__header{
     display: flex;
     justify-content: space-between;
-    padding: 10px 20px;
+    padding: 5px 20px;
 }
 
 .sidebar__headerLeft{
     display: flex;
     align-items: center;
 }
-/* 
-.sidebar__headerLeft .MuiAvatar-fallback{
-    width: 90%;
-    height: 90%;
-} */
-
-/* .sidebar__headerLeft .MuiAvatar-root{
-    width: 50px;
-    height: 50px;
-} */
 
 .sidebar__headerRight{
     display: flex;
@@ -34,15 +24,7 @@
 }
 
 .sidebar__headerRight .MuiSvgIcon-root {
-    font-size: 30px;
-}
-
-.sidebar__search {
-    display: flex;
-    align-items: center;
-    background-color: #f6f6f6;
-    height: 55px;
-    padding: 10px;
+    font-size: 22px;
 }
 
 .sidebar__status{
@@ -50,22 +32,31 @@
 }
 
 .sidebar__statusUpdate{
-    height: 10px;
-    width: 10px;
+    height: 7px;
+    width: 7px;
     position: absolute;
     border-radius: 50%;
     background-color: #25d366;
-    top: 15px;
+    top: 13px;
     right: 15px;
 }
+
+.sidebar__search {
+    display: flex;
+    align-items: center;
+    background-color: #f6f6f6;
+    height: 40px;
+    padding: 5px 10px;
+}
+
 
 .sidebar__searchContainer{
     display: flex;
     align-items: center;
     background-color: white;
     width: 100%;
-    height: 50px;
-    border-radius: 22.5px;
+    height: 35px;
+    border-radius: 18.5px;
 }
 
 .sidebar__searchContainer > .MuiSvgIcon-root {
@@ -77,8 +68,9 @@
     border: none;
     outline-width: 0;
     margin-left: 10px;
-    height: 45px;
-    font-size: 18px;
+    height: 32px;
+    font-size: 14px;
+    color: gray
 }
 
 .sidebar__chats{
