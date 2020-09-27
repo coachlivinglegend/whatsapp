@@ -11,20 +11,21 @@ const port = process.env.PORT || 5000;
 
 //middlewares
 app.use(express.json())
-const pusher = new Pusher({
-    appId: '1078994',
-    key: '32f57dadcb8ff9637c3c',
-    secret: '0f2c30d199195ee83ade',
-    cluster: 'eu',
-    encrypted: true
-});
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');;
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
     next();
 })
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../client/build')))
+    app.get('*', function(req, res) {
+        res.sendFile(path.join(__dirname, '../client/build', 'index.html'))
+    })
+}
+
 
 //routes
 app.get('/', (req, res) => {
@@ -83,19 +84,6 @@ app.post('/chat', (req, res) => {
 })
 
 
-
-// app.post('/messages/new', (req, res) => {
-//     const dbMessage = req.body
-    
-//     Messages.create(dbMessage, (error, data) => {
-//         if (error) {
-//             res.status(500).send(error)
-//         } else {
-//             res.status(201).send(data)
-//         }
-//     })
-// })
-
 app.post('/contacts', (req, res) => {
     const criteria = req.body
     Chat.find({$or: [ {'participants.sender': criteria.user}, {'participants.receiver': criteria.user}] }, (error, data) => {
@@ -106,7 +94,7 @@ app.post('/contacts', (req, res) => {
             const finalResponse = data.map(async dat => {
                 const idOfSender = dat.participants[0].sender;
                 const idOfReceiver = dat.participants[1].receiver;
-
+                
                 const detailsOfSender = await User.findById(idOfSender).exec()
                 .then(data => data)
                 .catch(error => res.status(500).send(error))
@@ -149,7 +137,7 @@ app.post('/contacts/contactId/:contactId', (req, res) => {
                 const authorNames = await User.find({$or: [ {_id: theSender}, {_id: theReceiver}] }).exec()
                 .then(result => result)
                 .catch(error => error)
-
+                
                 return authorNames
             })
             .catch(error => error)
@@ -202,6 +190,14 @@ mongoose.connect(mongodb_connection_url, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
+
+const pusher = new Pusher({
+    appId: '1078994',
+    key: '32f57dadcb8ff9637c3c',
+    secret: '0f2c30d199195ee83ade',
+    cluster: 'eu',
+    encrypted: true
+});
 
 const db = mongoose.connection
 db.once('open', () => {

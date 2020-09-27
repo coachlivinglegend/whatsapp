@@ -61,11 +61,15 @@
 .chat__footer > form > input {
     flex: 1;
     border-radius: 31px;
-    padding: 10px;
+    padding: 10px 20px;
     border: none;
-    height: 25px;
+    height: 45px;
     outline: none;
     font-size: 18px;
+}
+
+.chat__footer > form > input::placeholder {
+    font-size: 15px;
 }
 
 .chat__footer > .MuiSvgIcon-root {
