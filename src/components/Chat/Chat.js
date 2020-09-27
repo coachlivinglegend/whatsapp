@@ -60,6 +60,8 @@ const Chat = ({ messages, match }) => {
             setAllMessages(chatMessage)
 
             const chatDetails = chat.authors
+            console.log({chatDetails})
+            console.log({User})
             if (chatDetails[0]._id === User._id) {
                 setChatInfo(chatDetails[1])
             } else if (chatDetails[0]._id !== User._id) {

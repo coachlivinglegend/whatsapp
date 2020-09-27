@@ -12,23 +12,23 @@ import { Route, Switch } from 'react-router-dom'
 
 
 function App() {
-  const [messages, setMessages] = useState([])
+  // const [messages, setMessages] = useState([])
   const [user, setUser] = useState(null);
 
   let unsubscribeFromAuth = null
 
   useEffect(() => {
-    axios.get('/messages/sync')
-    .then(response => {
-      // console.log(response.data)
-      setMessages(response.data)
-    })
+    // axios.get('/messages/sync')
+    // .then(response => {
+    //   // console.log(response.data)
+    //   setMessages(response.data)
+    // })
 
     unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
       const phone = "0" + randomIntFromInterval(7, 9) + randomIntFromInterval(0, 1) + randomIntFromInterval(0, 9) + randomIntFromInterval(0, 9) + randomIntFromInterval(0, 9) + randomIntFromInterval(0, 9) + randomIntFromInterval(0, 9) + randomIntFromInterval(0, 9) + randomIntFromInterval(0, 9) + randomIntFromInterval(0, 9)
       if (userAuth) {
-        // console.log(userAuth)
+        console.log(userAuth)
         await axios.post('/register', {
           appPhoneNumber: phone,
           displayName: userAuth.displayName,
@@ -47,19 +47,19 @@ function App() {
     return () => unsubscribeFromAuth();
   }, [])
 
-  useEffect(() => {
-    const pusher = new Pusher('32f57dadcb8ff9637c3c', {
-      cluster: 'eu'
-    });
+  // useEffect(() => {
+  //   const pusher = new Pusher('32f57dadcb8ff9637c3c', {
+  //     cluster: 'eu'
+  //   });
 
-    const channel = pusher.subscribe('messages');
-    channel.bind('inserted', (newMessage) => {
-      alert(JSON.stringify(newMessage))
+  //   const channel = pusher.subscribe('messages');
+  //   channel.bind('inserted', (newMessage) => {
+  //     alert(JSON.stringify(newMessage))
 
-      // setMessages([...messages, newMessage])
-    })
+  //     // setMessages([...messages, newMessage])
+  //   })
 
-  }, [messages])
+  // }, [messages])
 
   return (
     <div className="app">
@@ -79,7 +79,7 @@ function App() {
                 {/* <Chat/> */}
               </Route>
               <Route path="/chat/:chatId">
-                <Chat messages={messages}/>
+                <Chat/>
               </Route>
             </Switch>
           </div>

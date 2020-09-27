@@ -12,11 +12,12 @@ import axios from '../../axios'
 
 const Sidebar = () => {
     const User = useContext(UserContext)
-    const { _id, displayName, email, avatar, appPhoneNumber } = User
+    const { _id, displayName, avatar, appPhoneNumber } = User
     const [contacts, setContacts] = useState([])
+    const [addChat, setAddChat] = useState(1)
+    const [chatPartner, setChatPartner] = useState('')
 
     useEffect(() => {
-        console.log(_id)
         axios.post('/contacts', {
             user: _id
         })
@@ -24,7 +25,7 @@ const Sidebar = () => {
             console.log(response.data)
             setContacts(response.data)
         })
-    }, [])
+    }, [addChat])
 
     const showProfile = () => {
         const profile = document.querySelector('.sidebar__profile')
@@ -36,6 +37,33 @@ const Sidebar = () => {
         profile.style.display = "none"
     }
 
+    const openNewConvo = () => {
+        const newConvo = document.querySelector('.sidebar__newConvo')
+        newConvo.style.display = "flex"
+    }
+
+    const hideNewConvo = () => {
+        const newConvo = document.querySelector('.sidebar__newConvo')
+        newConvo.style.display = "none"
+    }
+
+    const startChat = () => {
+        axios.post('/chat', {
+            participants : [
+                {
+                    sender: _id
+                },
+                {
+                    receiver: chatPartner
+                }
+            ]
+        })
+        .then(response => {
+            console.log("data", response.data);
+            setAddChat(addChat+1)
+            hideNewConvo()
+        })
+    }
 
     return (
         <div className="sidebar">
@@ -51,7 +79,7 @@ const Sidebar = () => {
                             <div className="sidebar__statusUpdate"/>                      
                         </div>
 
-                    <IconButton>
+                    <IconButton  onClick={openNewConvo}>
                         <ChatIcon/>
                     </IconButton>
                     <IconButton>
@@ -99,6 +127,22 @@ const Sidebar = () => {
                 </div>
                 <div className="profile__base">
 
+                </div>
+            </div>
+            <div className="sidebar__newConvo">
+                <div className="profile__top">
+                    <span> 
+                        <ArrowBackRoundedIcon onClick={hideNewConvo}/>
+                    </span>
+                    <span>Start A New Chat</span>
+                </div>
+                <div className="newConvo__chat">
+                    <div>
+                        <input type="text" value={chatPartner} placeholder="provide their phone number" onChange={e => setChatPartner(e.target.value)}></input>
+                    </div>
+                    <div>
+                        <button onClick={startChat}> START CHAT </button>
+                    </div>
                 </div>
             </div>
         </div>
