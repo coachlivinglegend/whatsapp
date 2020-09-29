@@ -20,7 +20,7 @@ const SidebarChat = ( { contact } ) => {
         } else if (contact.participants[0].sender._id !== _id) {
             setChatDisplayDetails(contact.participants[0].sender)
         }
-    }, [])
+    }, [_id, contact.participants])
 
     useEffect(() => {
         const pusher = new Pusher('32f57dadcb8ff9637c3c', {
@@ -59,7 +59,7 @@ const SidebarChat = ( { contact } ) => {
                 </div>
                 <div className="sidebarChat__info">
                     <h3><span>{chatDisplayDetails.displayName}</span> <span className="chatLastTime">{lastMessage? lastMessage.time: ''}</span></h3>
-                    <p>{lastMessage? lastMessage.msg: 'Send a message.'}</p>
+                    <p>{lastMessage? lastMessage.msg: (chatDisplayDetails.displayName === User.displayName ? 'wants to start a conversation' : 'Send a message.')}</p>
                 </div>
             </div>
         </Link>

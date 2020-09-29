@@ -12,15 +12,16 @@ import back from './wallpaper.PNG'
 import { withRouter } from 'react-router-dom';
 import UserContext from '../../ContextAPI/User/UserContext'
 import Pusher from 'pusher-js'
+import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
 
-
-const Chat = ({ messages, match }) => {
+const Chat = ({ match }) => {
     const User = useContext(UserContext)
     const [msg, sendMsg] = useState('')
     // const [message, sendMessage] = useState('')
     const [allMessages, setAllMessages] = useState([])
     const [chatInfo, setChatInfo] = useState('')
     const [chat_Id, setChat_Id] = useState('')
+    const [reactPusher, setReactPusher] = useState(1)
 
     useEffect(() => {
         const pusher = new Pusher('32f57dadcb8ff9637c3c', {
@@ -29,7 +30,9 @@ const Chat = ({ messages, match }) => {
 
         const channel = pusher.subscribe('chats');
         channel.bind('updated', (newMessage) => {
-            setAllMessages([...allMessages, newMessage])
+            console.log(newMessage)
+            // setAllMessages([...allMessages, newMessage])
+            setReactPusher(reactPusher+1)
         })
     
         return () => {
@@ -39,6 +42,14 @@ const Chat = ({ messages, match }) => {
 
     }, [allMessages])
 
+
+    // useEffect(() => {
+    //     const side = document.querySelector('.sidebar')
+    //     const chat = document.querySelector('.chat')
+    //     chat.style.display = "flex"
+    //     side.style.display = "none"
+    
+    // }, [match.params.chatId])
 
     useEffect(() => {
         const chatBody = document.querySelector('.chat__body');
@@ -68,19 +79,18 @@ const Chat = ({ messages, match }) => {
                 setChatInfo(chatDetails[0])
             }
         })
-    }, [match.params.chatId])
 
-    // const sendMessage = async (event) => {
-    //     event.preventDefault();
-    //     await axios.post('/messages/new', {
-    //         message: msg,
-    //         name: "James Harden",
-    //         timestamp: (new Date()).toString().slice(16, 21),
-    //         received: true
-    //     })
-        
-    //     sendMsg('')
-    // }
+        if (window.innerWidth > 712) {
+            return
+        }
+        setTimeout(() => {
+            const side = document.querySelector('.sidebar')
+            const chat = document.querySelector('.chat')
+            chat.style.display = "flex"
+            side.style.display = "none"            
+        }, 500);
+
+    }, [match.params.chatId, reactPusher])
 
     const sendMessage = async (event) => {
         event.preventDefault();
@@ -94,10 +104,18 @@ const Chat = ({ messages, match }) => {
         sendMsg('')
     }
 
+    const showChat = () => {
+        const side = document.querySelector('.sidebar')
+        const chat = document.querySelector('.chat')
+        chat.style.display = "none"
+        side.style.display = "flex"
+        side.style.flex = 1
+    }
 
     return (
         <div className="chat">
             <div className="chat__header">
+                <ArrowBackRoundedIcon onClick={showChat} className="chat__header__arrowBack"/>
                 <Avatar src={chatInfo.avatar}/>
                 <div className="chat__headerInfo">
                     <h3>{chatInfo.displayName}</h3>

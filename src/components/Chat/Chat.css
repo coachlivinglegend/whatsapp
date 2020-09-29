@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     flex: 0.7;
+    height: 100vh;
 }
 
 .chat__header{
@@ -13,6 +14,14 @@
 }
 .chat__headerRight .MuiSvgIcon-root{
     font-size: 22px;
+}
+
+/* .chat__header__arrowBack{ */
+.chat__header .MuiSvgIcon-root.chat__header__arrowBack {
+    fill: grey;
+    margin-left: -10px;
+    margin-right: 10px;
+    display: none;
 }
 
 .chat__headerInfo{

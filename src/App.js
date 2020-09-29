@@ -8,6 +8,7 @@ import Login from './components/Login/Login';
 import { auth } from './Firebase/firebase.utils'
 import UserContext from './ContextAPI/User/UserContext'
 import { Route, Switch } from 'react-router-dom'
+import Land from './components/Land/Land';
 
 
 
@@ -18,11 +19,6 @@ function App() {
   let unsubscribeFromAuth = null
 
   useEffect(() => {
-    // axios.get('/messages/sync')
-    // .then(response => {
-    //   // console.log(response.data)
-    //   setMessages(response.data)
-    // })
 
     unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
@@ -47,20 +43,6 @@ function App() {
     return () => unsubscribeFromAuth();
   }, [])
 
-  // useEffect(() => {
-  //   const pusher = new Pusher('32f57dadcb8ff9637c3c', {
-  //     cluster: 'eu'
-  //   });
-
-  //   const channel = pusher.subscribe('messages');
-  //   channel.bind('inserted', (newMessage) => {
-  //     alert(JSON.stringify(newMessage))
-
-  //     // setMessages([...messages, newMessage])
-  //   })
-
-  // }, [messages])
-
   return (
     <div className="app">
       {
@@ -76,7 +58,7 @@ function App() {
             <Sidebar/>
             <Switch>
               <Route exact path="/">
-                {/* <Chat/> */}
+                <Land />
               </Route>
               <Route path="/chat/:chatId">
                 <Chat/>

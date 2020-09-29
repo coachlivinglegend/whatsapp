@@ -44,16 +44,23 @@
     justify-content: space-between;
 }
 
+.sidebarChat__info > h3 span:first-child {
+    width: calc(100% - 52px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .chatLastTime{
     color: gray;
     font-size: 13px;
-    /* align-self: flex-start; */
     justify-self: flex-end;
     margin-right: 20px;
 }
 
 .sidebarChat__info > p {
-    max-width: 300px;
+    /* width: 250px; */
+    width: 85%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

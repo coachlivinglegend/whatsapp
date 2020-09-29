@@ -9,6 +9,9 @@ import { SearchOutlined } from '@material-ui/icons'
 import SidebarChat from '../SidebarChat/SidebarChat';
 import UserContext from '../../ContextAPI/User/UserContext'
 import axios from '../../axios'
+import Pusher from 'pusher-js'
+import { auth } from '../../Firebase/firebase.utils';
+
 
 const Sidebar = () => {
     const User = useContext(UserContext)
@@ -16,16 +19,42 @@ const Sidebar = () => {
     const [contacts, setContacts] = useState([])
     const [addChat, setAddChat] = useState(1)
     const [chatPartner, setChatPartner] = useState('')
-
+    const [searchField, setSearchField] = useState('')
+    const [allUsers, setAllUsers] = useState([])
     useEffect(() => {
         axios.post('/contacts', {
             user: _id
         })
         .then(response => {
-            console.log(response.data)
             setContacts(response.data)
+            console.log(response.data)
         })
-    }, [addChat])
+    }, [addChat, _id])
+
+
+    // useEffect(() => {
+    //     axios.get('/users')
+    //     .then(res => console.log(res.data))
+    // }, [])
+
+    useEffect(() => {
+        const pusher = new Pusher('32f57dadcb8ff9637c3c', {
+            cluster: 'eu'
+        });
+
+        const channel = pusher.subscribe('chats');
+        channel.bind('inserted', (data) => {
+            console.log(data)
+            setAddChat(addChat+1)
+        })
+    
+        return () => {
+            channel.unbind_all();
+            channel.unsubscribe();
+        }
+
+    }, [])
+
 
     const showProfile = () => {
         const profile = document.querySelector('.sidebar__profile')
@@ -90,12 +119,18 @@ const Sidebar = () => {
             <div className="sidebar__search">
                 <div className="sidebar__searchContainer">
                     <SearchOutlined />
-                    <input placeholder="Search or start a new chat" type="text" />
+                    <input value={searchField} onChange={e => setSearchField(e.target.value)} placeholder="Search for chat" type="text" />
                 </div>
             </div>
             <div className="sidebar__chats">
                 {
-                    contacts.map(contact => {
+                    contacts.filter(contact => {
+                        if (contact.participants[0].sender._id === _id) {
+                            return contact.participants[1].receiver.displayName.toLowerCase().includes(searchField.toLowerCase())
+                        } else if (contact.participants[0].sender._id !== _id) {
+                            return contact.participants[0].sender.displayName.toLowerCase().includes(searchField.toLowerCase())
+                        }
+                    }).map(contact => {
                         return <SidebarChat key={contact._id} contact={contact}/>
                     })
                 }
@@ -126,7 +161,9 @@ const Sidebar = () => {
                     <p>This is your username and the phone number we have assigned to you. This is the phone number your friends will contact you with.</p>
                 </div>
                 <div className="profile__base">
-
+                <div className="login__button" onClick={() => auth.signOut()}>
+                    <div className="button__started">SIGN OUT</div>
+                </div>
                 </div>
             </div>
             <div className="sidebar__newConvo">
@@ -139,9 +176,42 @@ const Sidebar = () => {
                 <div className="newConvo__chat">
                     <div>
                         <input type="text" value={chatPartner} placeholder="provide their phone number" onChange={e => setChatPartner(e.target.value)}></input>
+                        <p>This is the phone number assigned to their account on this app.</p>
                     </div>
                     <div>
                         <button onClick={startChat}> START CHAT </button>
+                    </div>
+                    <div>
+                        <p>Don't have anyone's number?<br/> Send Daniel a message, 08018443311.</p>
+                    </div>
+                    <div className="all__user__comp">
+                        <h3>You can also send a message to anyone of these users.</h3>
+                        <div className='all__users'>
+                            <div className="one__user">
+                                <div className="user__top">
+                                    <div className="user__top__pic"><Avatar src={avatar}/></div><div className="user__top__name"><span>Daniel Beckley</span></div>
+                                </div>
+                                <div className="user__bottom">
+                                    <span>08023274058</span>
+                                </div>
+                            </div>
+                            <div className="one__user">
+                                <div className="user__top">
+                                    <div className="user__top__pic"><Avatar src={avatar}/></div><div className="user__top__name">Daniel Beckley</div>
+                                </div>
+                                <div className="user__bottom">
+                                    <p>08023274058</p>
+                                </div>
+                            </div>
+                            <div className="one__user">
+                                <div className="user__top">
+                                    <div className="user__top__pic"><Avatar src={avatar}/></div><div className="user__top__name">Daniel Beckley</div>
+                                </div>
+                                <div className="user__bottom">
+                                    <p>08023274058</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
