@@ -286,13 +286,15 @@
 }
 
 .all__users{
-    width: 100%;
+    width: auto;
     padding: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 450px;
+    height: 250px;
     overflow-y: auto;
+    border: 1px solid gray;
+    margin: 5px 25px;
 }
 
 .one__user{

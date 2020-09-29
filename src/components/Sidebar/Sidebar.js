@@ -32,10 +32,10 @@ const Sidebar = () => {
     }, [addChat, _id])
 
 
-    // useEffect(() => {
-    //     axios.get('/users')
-    //     .then(res => console.log(res.data))
-    // }, [])
+    useEffect(() => {
+        axios.get('/users')
+        .then(res => setAllUsers(res.data))
+    }, [])
 
     useEffect(() => {
         const pusher = new Pusher('32f57dadcb8ff9637c3c', {
@@ -176,6 +176,7 @@ const Sidebar = () => {
                 <div className="newConvo__chat">
                     <div>
                         <input type="text" value={chatPartner} placeholder="provide their phone number" onChange={e => setChatPartner(e.target.value)}></input>
+                        {/* <div cla></div> */}
                         <p>This is the phone number assigned to their account on this app.</p>
                     </div>
                     <div>
@@ -187,30 +188,20 @@ const Sidebar = () => {
                     <div className="all__user__comp">
                         <h3>You can also send a message to anyone of these users.</h3>
                         <div className='all__users'>
-                            <div className="one__user">
-                                <div className="user__top">
-                                    <div className="user__top__pic"><Avatar src={avatar}/></div><div className="user__top__name"><span>Daniel Beckley</span></div>
-                                </div>
-                                <div className="user__bottom">
-                                    <span>08023274058</span>
-                                </div>
-                            </div>
-                            <div className="one__user">
-                                <div className="user__top">
-                                    <div className="user__top__pic"><Avatar src={avatar}/></div><div className="user__top__name">Daniel Beckley</div>
-                                </div>
-                                <div className="user__bottom">
-                                    <p>08023274058</p>
-                                </div>
-                            </div>
-                            <div className="one__user">
-                                <div className="user__top">
-                                    <div className="user__top__pic"><Avatar src={avatar}/></div><div className="user__top__name">Daniel Beckley</div>
-                                </div>
-                                <div className="user__bottom">
-                                    <p>08023274058</p>
-                                </div>
-                            </div>
+                            {
+                                allUsers.map(user => {
+                                    return (
+                                        <div className="one__user">
+                                            <div className="user__top">
+                                                <div className="user__top__pic"><Avatar src={user.avatar}/></div><div className="user__top__name"><span>{user.displayName}</span></div>
+                                            </div>
+                                            <div className="user__bottom">
+                                                <span>{user.appPhoneNumber}</span>
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                            }
                         </div>
                     </div>
                 </div>
