@@ -2,7 +2,7 @@ import { Avatar, IconButton } from '@material-ui/core'
 import { AttachFile, SearchOutlined } from "@material-ui/icons";
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import InsertEmoticonIcon from '@material-ui/icons/InsertEmoticon';
-import MicIcon from '@material-ui/icons/Mic'
+import SendRoundedIcon from '@material-ui/icons/SendRounded';
 import React, { useEffect, useState, useContext } from 'react'
 import './Chat.css'
 import ChatReceived from './ChatReceived/ChatReceived';
@@ -30,15 +30,9 @@ const Chat = ({ match }) => {
 
         const channel = pusher.subscribe('chats');
         channel.bind('updated', (newMessage) => {
-            console.log(newMessage)
             // setAllMessages([...allMessages, newMessage])
             setReactPusher(reactPusher+1)
-        })
-    
-        return () => {
-            channel.unbind_all();
-            channel.unsubscribe();
-        }
+        })    
 
     }, [allMessages])
 
@@ -64,15 +58,11 @@ const Chat = ({ match }) => {
         })
         .then(response => {
             const chat = response.data
-            console.log(response.data)
             setChat_Id(chat._id)
             const chatMessage = chat.messages
-            console.log(chatMessage)
             setAllMessages(chatMessage)
 
             const chatDetails = chat.authors
-            console.log({chatDetails})
-            console.log({User})
             if (chatDetails[0]._id === User._id) {
                 setChatInfo(chatDetails[1])
             } else if (chatDetails[0]._id !== User._id) {
@@ -156,7 +146,9 @@ const Chat = ({ match }) => {
                         type="text"
                     />
                 </form>
-                <MicIcon/>
+                <IconButton onClick={sendMessage}>
+                    <SendRoundedIcon />
+                </IconButton>
             </div>
         </div>
     )

@@ -74,7 +74,7 @@
     border: none;
     height: 45px;
     outline: none;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .chat__footer > form > input::placeholder {

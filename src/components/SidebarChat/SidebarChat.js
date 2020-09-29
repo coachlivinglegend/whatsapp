@@ -32,11 +32,6 @@ const SidebarChat = ( { contact } ) => {
             setPusher({msg : newMessage.message, time: newMessage.timestamp})
         })
     
-        return () => {
-            channel.unbind_all();
-            channel.unsubscribe();
-        }
-
     }, [pusherChanged])
 
     useEffect(() => {

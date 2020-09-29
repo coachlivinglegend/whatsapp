@@ -27,7 +27,6 @@ const Sidebar = () => {
         })
         .then(response => {
             setContacts(response.data)
-            console.log(response.data)
         })
     }, [addChat, _id])
 
@@ -44,14 +43,8 @@ const Sidebar = () => {
 
         const channel = pusher.subscribe('chats');
         channel.bind('inserted', (data) => {
-            console.log(data)
             setAddChat(addChat+1)
-        })
-    
-        return () => {
-            channel.unbind_all();
-            channel.unsubscribe();
-        }
+        })    
 
     }, [])
 
@@ -88,7 +81,6 @@ const Sidebar = () => {
             ]
         })
         .then(response => {
-            console.log("data", response.data);
             setAddChat(addChat+1)
             hideNewConvo()
         })
@@ -191,7 +183,7 @@ const Sidebar = () => {
                             {
                                 allUsers.map(user => {
                                     return (
-                                        <div className="one__user">
+                                        <div key={user._id} className="one__user">
                                             <div className="user__top">
                                                 <div className="user__top__pic"><Avatar src={user.avatar}/></div><div className="user__top__name"><span>{user.displayName}</span></div>
                                             </div>

@@ -24,7 +24,6 @@ function App() {
       const randomIntFromInterval = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
       const phone = "0" + randomIntFromInterval(7, 9) + randomIntFromInterval(0, 1) + randomIntFromInterval(0, 9) + randomIntFromInterval(0, 9) + randomIntFromInterval(0, 9) + randomIntFromInterval(0, 9) + randomIntFromInterval(0, 9) + randomIntFromInterval(0, 9) + randomIntFromInterval(0, 9) + randomIntFromInterval(0, 9)
       if (userAuth) {
-        console.log(userAuth)
         await axios.post('/register', {
           appPhoneNumber: phone,
           displayName: userAuth.displayName,
