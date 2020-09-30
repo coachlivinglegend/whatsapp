@@ -16,9 +16,9 @@ import Pusher from 'pusher-js'
 import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
 
 
-// const pusher = new Pusher('32f57dadcb8ff9637c3c', {
-//     cluster: 'eu'
-// });
+const pusher = new Pusher('32f57dadcb8ff9637c3c', {
+    cluster: 'eu'
+});
 
 const Chat = ({ match, parentCallBack, forRoute }) => {
     const User = useContext(UserContext)
@@ -37,16 +37,16 @@ const Chat = ({ match, parentCallBack, forRoute }) => {
     //     cluster: 'eu'
     // });
 
-    // useEffect(() => {
-    //     const channel = pusher.subscribe('chats');
-    //     channel.bind('updated', (newMessage) => {
-    //         // setAllMessages([...allMessages, newMessage])
-    //     })   
-    //     return () => {
-    //         channel.unbind();
-    //         pusher.unsubscribe()
-    //     }
-    // }, [])
+    useEffect(() => {
+        const channel = pusher.subscribe('chats');
+        channel.bind('updated', (newMessage) => {
+            setReactPusher(reactPusher+1)
+        })   
+        return () => {
+            channel.unbind();
+            pusher.unsubscribe()
+        }
+    }, [])
     
 
     // useEffect(() => {
@@ -104,7 +104,6 @@ const Chat = ({ match, parentCallBack, forRoute }) => {
             timestamp: (new Date()).toString().slice(16, 21),
         })
         setForSideChat(forSideChat+1)
-        setReactPusher(reactPusher+1)
         sendMsg('')
     }
 

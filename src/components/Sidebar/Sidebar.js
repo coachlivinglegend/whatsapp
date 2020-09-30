@@ -11,7 +11,10 @@ import UserContext from '../../ContextAPI/User/UserContext'
 import axios from '../../axios'
 import Pusher from 'pusher-js'
 import { auth } from '../../Firebase/firebase.utils';
-// import { pusher } from '../Chat/Chat'
+
+const pusher = new Pusher('32f57dadcb8ff9637c3c', {
+    cluster: 'eu'
+});
 
 
 const Sidebar = ({pushFromChat, parentCallBackTwo}) => {
@@ -29,7 +32,7 @@ const Sidebar = ({pushFromChat, parentCallBackTwo}) => {
         .then(response => {
             setContacts(response.data)
         })
-    }, [pushFromChat])
+    }, [addChat])
 
 
     useEffect(() => {
@@ -37,23 +40,20 @@ const Sidebar = ({pushFromChat, parentCallBackTwo}) => {
         .then(res => setAllUsers(res.data))
     }, [])
     
-    // useEffect(() => {
-    //     const pusher = new Pusher('32f57dadcb8ff9637c3c', {
-    //         cluster: 'eu'
-    //     });
-    //     console.log('using pusher')
+    useEffect(() => {
+        console.log('using pusher')
 
-    //     const channel = pusher.subscribe('chats');
-    //     channel.bind('inserted', (data) => {
-    //         setAddChat(addChat+1)
-    //     })    
+        const channel = pusher.subscribe('chats');
+        channel.bind('inserted', (data) => {
+            setAddChat(addChat+1)
+        })    
 
-    //     return () => {
-    //         channel.unbind();
-    //         pusher.unsubscribe()
-    //     }
+        return () => {
+            channel.unbind();
+            pusher.unsubscribe()
+        }
 
-    // }, [])
+    }, [])
 
 
 

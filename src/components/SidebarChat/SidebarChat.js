@@ -6,7 +6,10 @@ import axios from '../../axios'
 import { Link, Router, withRouter } from 'react-router-dom'
 import CheckRoundedIcon from '@material-ui/icons/CheckRounded';
 import Pusher from 'pusher-js'
-// import { pusher } from '../Chat/Chat'
+
+    const pusher = new Pusher('32f57dadcb8ff9637c3c', {
+        cluster: 'eu'
+    });
 
 
 const SidebarChat = ( props ) => {
@@ -16,6 +19,7 @@ const SidebarChat = ( props ) => {
     const [chatDisplayDetails, setChatDisplayDetails] = useState('')
     const [lastMessage, setLastMessage] = useState('')
     const [route, setRoute] = useState(1)
+    const [pusherChange, setPusherChange] = useState('')
     const sendRoute = () => {
         parentCallBackTwo(route)
     }
@@ -33,24 +37,20 @@ const SidebarChat = ( props ) => {
         }
     }, [_id, contact.participants])
 
-    // useEffect(() => {
-    //     const pusher = new Pusher('32f57dadcb8ff9637c3c', {
-    //         cluster: 'eu'
-    //     });
-    //     console.log('using pusher')
+    useEffect(() => {
+        console.log('using pusher')
 
-    //     const channel = pusher.subscribe('chats');
-    //     channel.bind('updated', (newMessage) => {
-    //         setPusher({msg : newMessage.message, time: newMessage.timestamp})
-    //     })
+        const channel = pusher.subscribe('chats');
+        channel.bind('updated', (newMessage) => {
+            setPusherChange({msg : newMessage.message, time: newMessage.timestamp})
+        })
 
-    //     return () => {
-    //         channel.unbind();
-    //         pusher.unsubscribe()
-    //     }
-
+        return () => {
+            channel.unbind();
+            pusher.unsubscribe()
+        }
     
-    // }, [pusherChanged])
+    }, [])
 
     useEffect(() => {
         axios.post(`/contacts/contactId/${contact._id}`, {
@@ -59,11 +59,10 @@ const SidebarChat = ( props ) => {
         .then(response => {
             const chat = response.data
             const chatMessage = chat.messages.slice(-1)[0]
-            console.log({chatMessage})
             chatMessage ? setLastMessage({msg : chatMessage.message, time: chatMessage.timestamp, sentBy: chatMessage.sentBy}) : setLastMessage('')
 
         })
-    }, [pushFromChat])
+    }, [pushFromChat, pusherChange])
 
     const myDiv = () => {
         return (
