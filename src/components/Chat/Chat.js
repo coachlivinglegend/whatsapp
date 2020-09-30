@@ -11,10 +11,16 @@ import axios from '../../axios'
 import back from './wallpaper.PNG'
 import { withRouter } from 'react-router-dom';
 import UserContext from '../../ContextAPI/User/UserContext'
+import PushContext from '../../ContextAPI/Push/PushContext'
 import Pusher from 'pusher-js'
 import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
 
-const Chat = ({ match }) => {
+
+// const pusher = new Pusher('32f57dadcb8ff9637c3c', {
+//     cluster: 'eu'
+// });
+
+const Chat = ({ match, parentCallBack }) => {
     const User = useContext(UserContext)
     const [msg, sendMsg] = useState('')
     // const [message, sendMessage] = useState('')
@@ -22,20 +28,26 @@ const Chat = ({ match }) => {
     const [chatInfo, setChatInfo] = useState('')
     const [chat_Id, setChat_Id] = useState('')
     const [reactPusher, setReactPusher] = useState(1)
+    const [forSideChat, setForSideChat] = useState(1)
+    const sendPush = () => {
+        parentCallBack(forSideChat)
+    }
+    
+    // const pusher = new Pusher('32f57dadcb8ff9637c3c', {
+    //     cluster: 'eu'
+    // });
 
-    useEffect(() => {
-        const pusher = new Pusher('32f57dadcb8ff9637c3c', {
-            cluster: 'eu'
-        });
-
-        const channel = pusher.subscribe('chats');
-        channel.bind('updated', (newMessage) => {
-            // setAllMessages([...allMessages, newMessage])
-            setReactPusher(reactPusher+1)
-        })    
-
-    }, [allMessages])
-
+    // useEffect(() => {
+    //     const channel = pusher.subscribe('chats');
+    //     channel.bind('updated', (newMessage) => {
+    //         // setAllMessages([...allMessages, newMessage])
+    //     })   
+    //     return () => {
+    //         channel.unbind();
+    //         pusher.unsubscribe()
+    //     }
+    // }, [])
+    
 
     // useEffect(() => {
     //     const side = document.querySelector('.sidebar')
@@ -44,14 +56,14 @@ const Chat = ({ match }) => {
     //     side.style.display = "none"
     
     // }, [match.params.chatId])
-
+    
     useEffect(() => {
         const chatBody = document.querySelector('.chat__body');
         setTimeout(() => {
             chatBody.scrollTop = chatBody.scrollHeight - chatBody.clientHeight;            
         }, 1000);
     }, [allMessages])
-
+    
     useEffect(() => {
         axios.post(`/contacts/contactId/${match.params.chatId}`, {
             ath: match.params.chatId
@@ -69,7 +81,7 @@ const Chat = ({ match }) => {
                 setChatInfo(chatDetails[0])
             }
         })
-
+        
         if (window.innerWidth > 712) {
             return
         }
@@ -79,9 +91,9 @@ const Chat = ({ match }) => {
             chat.style.display = "flex"
             side.style.display = "none"            
         }, 500);
-
-    }, [match.params.chatId, reactPusher])
-
+        
+    }, [ match.params.chatId, reactPusher])
+    
     const sendMessage = async (event) => {
         event.preventDefault();
         await axios.put(`/chat/id/${chat_Id}`, {
@@ -90,9 +102,14 @@ const Chat = ({ match }) => {
             id: chat_Id,
             timestamp: (new Date()).toString().slice(16, 21),
         })
-        
+        setForSideChat(forSideChat+1)
+        setReactPusher(reactPusher+1)
         sendMsg('')
     }
+
+    useEffect(() => {
+        sendPush()
+    }, [forSideChat])
 
     const showChat = () => {
         const side = document.querySelector('.sidebar')

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Sidebar from './components/Sidebar/Sidebar';
 import Chat from './components/Chat/Chat'
 import './App.css'
@@ -15,6 +15,11 @@ import Land from './components/Land/Land';
 function App() {
   // const [messages, setMessages] = useState([])
   const [user, setUser] = useState(null);
+  const [pushFromChat, setPushFromChat] = useState(1);
+
+  const callbackFunction = (childData) => {
+    setPushFromChat(childData)
+  }
 
   let unsubscribeFromAuth = null
 
@@ -54,13 +59,13 @@ function App() {
         (
         <UserContext.Provider value={user}>
           <div className="app__body">
-            <Sidebar/>
+            <Sidebar pushFromChat={pushFromChat} />
             <Switch>
               <Route exact path="/">
                 <Land />
               </Route>
               <Route path="/chat/:chatId">
-                <Chat/>
+                <Chat parentCallBack={callbackFunction}/>
               </Route>
             </Switch>
           </div>

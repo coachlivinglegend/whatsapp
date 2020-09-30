@@ -5,14 +5,16 @@ import UserContext from '../../ContextAPI/User/UserContext'
 import axios from '../../axios'
 import { Link } from 'react-router-dom'
 import Pusher from 'pusher-js'
+// import { pusher } from '../Chat/Chat'
 
 
-const SidebarChat = ( { contact } ) => {
+const SidebarChat = ( { contact, pushFromChat } ) => {
+
     const User = useContext(UserContext)
     const { _id } = User
     const [chatDisplayDetails, setChatDisplayDetails] = useState('')
     const [lastMessage, setLastMessage] = useState('')
-    const [pusherChanged, setPusher] = useState('')
+    // const [pusherChanged, setPusher] = useState('')
 
     useEffect(() => {
         if (contact.participants[0].sender._id === _id) {
@@ -22,17 +24,24 @@ const SidebarChat = ( { contact } ) => {
         }
     }, [_id, contact.participants])
 
-    useEffect(() => {
-        const pusher = new Pusher('32f57dadcb8ff9637c3c', {
-            cluster: 'eu'
-        });
+    // useEffect(() => {
+    //     const pusher = new Pusher('32f57dadcb8ff9637c3c', {
+    //         cluster: 'eu'
+    //     });
+    //     console.log('using pusher')
 
-        const channel = pusher.subscribe('chats');
-        channel.bind('updated', (newMessage) => {
-            setPusher({msg : newMessage.message, time: newMessage.timestamp})
-        })
+    //     const channel = pusher.subscribe('chats');
+    //     channel.bind('updated', (newMessage) => {
+    //         setPusher({msg : newMessage.message, time: newMessage.timestamp})
+    //     })
+
+    //     return () => {
+    //         channel.unbind();
+    //         pusher.unsubscribe()
+    //     }
+
     
-    }, [pusherChanged])
+    // }, [pusherChanged])
 
     useEffect(() => {
         axios.post(`/contacts/contactId/${contact._id}`, {
@@ -42,9 +51,9 @@ const SidebarChat = ( { contact } ) => {
             const chat = response.data
             const chatMessage = chat.messages.slice(-1)[0]
             chatMessage ? setLastMessage({msg : chatMessage.message, time: chatMessage.timestamp}) : setLastMessage('')
-        })
-    }, [contact._id, pusherChanged])
 
+        })
+    }, [pushFromChat])
 
     return (
         <Link className="link" to={`/chat/${contact._id}`}>

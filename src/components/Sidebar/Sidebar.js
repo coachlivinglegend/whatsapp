@@ -11,9 +11,10 @@ import UserContext from '../../ContextAPI/User/UserContext'
 import axios from '../../axios'
 import Pusher from 'pusher-js'
 import { auth } from '../../Firebase/firebase.utils';
+// import { pusher } from '../Chat/Chat'
 
 
-const Sidebar = () => {
+const Sidebar = ({pushFromChat}) => {
     const User = useContext(UserContext)
     const { _id, displayName, avatar, appPhoneNumber } = User
     const [contacts, setContacts] = useState([])
@@ -28,25 +29,32 @@ const Sidebar = () => {
         .then(response => {
             setContacts(response.data)
         })
-    }, [addChat, _id])
+    }, [pushFromChat])
 
 
     useEffect(() => {
         axios.get('/users')
         .then(res => setAllUsers(res.data))
     }, [])
+    
+    // useEffect(() => {
+    //     const pusher = new Pusher('32f57dadcb8ff9637c3c', {
+    //         cluster: 'eu'
+    //     });
+    //     console.log('using pusher')
 
-    useEffect(() => {
-        const pusher = new Pusher('32f57dadcb8ff9637c3c', {
-            cluster: 'eu'
-        });
+    //     const channel = pusher.subscribe('chats');
+    //     channel.bind('inserted', (data) => {
+    //         setAddChat(addChat+1)
+    //     })    
 
-        const channel = pusher.subscribe('chats');
-        channel.bind('inserted', (data) => {
-            setAddChat(addChat+1)
-        })    
+    //     return () => {
+    //         channel.unbind();
+    //         pusher.unsubscribe()
+    //     }
 
-    }, [])
+    // }, [])
+
 
 
     const showProfile = () => {
@@ -123,7 +131,7 @@ const Sidebar = () => {
                             return contact.participants[0].sender.displayName.toLowerCase().includes(searchField.toLowerCase())
                         }
                     }).map(contact => {
-                        return <SidebarChat key={contact._id} contact={contact}/>
+                        return <SidebarChat pushFromChat={pushFromChat} key={contact._id} contact={contact}/>
                     })
                 }
             </div>

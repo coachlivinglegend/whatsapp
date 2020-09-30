@@ -46,6 +46,7 @@
     background-position: center;
     padding: 20px 9%;
     overflow-y: auto;
+    transition: 0.5 ease;
 }
 
 
