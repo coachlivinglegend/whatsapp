@@ -20,7 +20,7 @@ import ArrowBackRoundedIcon from '@material-ui/icons/ArrowBackRounded';
 //     cluster: 'eu'
 // });
 
-const Chat = ({ match, parentCallBack }) => {
+const Chat = ({ match, parentCallBack, forRoute }) => {
     const User = useContext(UserContext)
     const [msg, sendMsg] = useState('')
     // const [message, sendMessage] = useState('')
@@ -81,21 +81,22 @@ const Chat = ({ match, parentCallBack }) => {
                 setChatInfo(chatDetails[0])
             }
         })
+        console.log('mount')
         
         if (window.innerWidth > 712) {
             return
         }
-        setTimeout(() => {
             const side = document.querySelector('.sidebar')
             const chat = document.querySelector('.chat')
             chat.style.display = "flex"
             side.style.display = "none"            
-        }, 500);
         
-    }, [ match.params.chatId, reactPusher])
+    }, [ match.params.chatId, reactPusher, forRoute])
     
     const sendMessage = async (event) => {
         event.preventDefault();
+
+        if (!msg) return
         await axios.put(`/chat/id/${chat_Id}`, {
             message: msg,
             sender: User._id,

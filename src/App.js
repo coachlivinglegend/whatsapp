@@ -16,11 +16,16 @@ function App() {
   // const [messages, setMessages] = useState([])
   const [user, setUser] = useState(null);
   const [pushFromChat, setPushFromChat] = useState(1);
+  const [forRoute, setForRoute] = useState(1);
 
   const callbackFunction = (childData) => {
     setPushFromChat(childData)
   }
 
+  const parentCallBackTwo = (childData) => {
+    setForRoute(childData)
+  }
+  
   let unsubscribeFromAuth = null
 
   useEffect(() => {
@@ -59,14 +64,10 @@ function App() {
         (
         <UserContext.Provider value={user}>
           <div className="app__body">
-            <Sidebar pushFromChat={pushFromChat} />
+            <Sidebar parentCallBackTwo={parentCallBackTwo} pushFromChat={pushFromChat} />
             <Switch>
-              <Route exact path="/">
-                <Land />
-              </Route>
-              <Route path="/chat/:chatId">
-                <Chat parentCallBack={callbackFunction}/>
-              </Route>
+              <Route exact path="/" render={() => <Land/>}/>
+              <Route path="/chat/:chatId" render={(props) => <Chat {...props} forRoute={forRoute} parentCallBack={callbackFunction}/>} />
             </Switch>
           </div>
         </UserContext.Provider>

@@ -14,7 +14,7 @@ import { auth } from '../../Firebase/firebase.utils';
 // import { pusher } from '../Chat/Chat'
 
 
-const Sidebar = ({pushFromChat}) => {
+const Sidebar = ({pushFromChat, parentCallBackTwo}) => {
     const User = useContext(UserContext)
     const { _id, displayName, avatar, appPhoneNumber } = User
     const [contacts, setContacts] = useState([])
@@ -131,7 +131,7 @@ const Sidebar = ({pushFromChat}) => {
                             return contact.participants[0].sender.displayName.toLowerCase().includes(searchField.toLowerCase())
                         }
                     }).map(contact => {
-                        return <SidebarChat pushFromChat={pushFromChat} key={contact._id} contact={contact}/>
+                        return <SidebarChat parentCallBackTwo={parentCallBackTwo} pushFromChat={pushFromChat} key={contact._id} contact={contact}/>
                     })
                 }
             </div>
