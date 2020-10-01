@@ -41,11 +41,9 @@ const Sidebar = ({pushFromChat, parentCallBackTwo}) => {
     }, [])
     
     useEffect(() => {
-        console.log('using pusher')
-
         const channel = pusher.subscribe('chats');
         channel.bind('inserted', (data) => {
-            setAddChat(addChat+1)
+            setAddChat(Date.now())
         })    
 
         return () => {

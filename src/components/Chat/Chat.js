@@ -40,7 +40,7 @@ const Chat = ({ match, parentCallBack, forRoute }) => {
     useEffect(() => {
         const channel = pusher.subscribe('chats');
         channel.bind('updated', (newMessage) => {
-            setReactPusher(reactPusher+1)
+            setReactPusher(Date.now())
         })   
         return () => {
             channel.unbind();
@@ -61,7 +61,7 @@ const Chat = ({ match, parentCallBack, forRoute }) => {
         const chatBody = document.querySelector('.chat__body');
         setTimeout(() => {
             chatBody.scrollTop = chatBody.scrollHeight - chatBody.clientHeight;            
-        }, 1000);
+        }, 200);
     }, [allMessages])
     
     useEffect(() => {
@@ -81,18 +81,30 @@ const Chat = ({ match, parentCallBack, forRoute }) => {
                 setChatInfo(chatDetails[0])
             }
         })
-        console.log('mount')
-        
-        if (window.innerWidth > 712) {
-            return
-        }
+        if (window.innerWidth < 712) {
             const side = document.querySelector('.sidebar')
             const chat = document.querySelector('.chat')
             chat.style.display = "flex"
-            side.style.display = "none"            
-        
-    }, [ match.params.chatId, reactPusher, forRoute])
+            side.style.display = "none"      
+        }
+        else if (window.innerWidth > 712) {
+            return
+        }
+    }, [ match.params.chatId, forRoute])
     
+    useEffect(() => {
+        axios.post(`/contacts/contactId/${match.params.chatId}`, {
+            ath: match.params.chatId
+        })
+        .then(response => {
+            const chat = response.data
+            setChat_Id(chat._id)
+            const chatMessage = chat.messages
+            setAllMessages(chatMessage)
+        })
+    }, [reactPusher])
+
+
     const sendMessage = async (event) => {
         event.preventDefault();
 

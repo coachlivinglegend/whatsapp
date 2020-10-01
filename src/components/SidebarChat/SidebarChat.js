@@ -38,11 +38,9 @@ const SidebarChat = ( props ) => {
     }, [_id, contact.participants])
 
     useEffect(() => {
-        console.log('using pusher')
-
         const channel = pusher.subscribe('chats');
         channel.bind('updated', (newMessage) => {
-            setPusherChange({msg : newMessage.message, time: newMessage.timestamp})
+            setPusherChange(Date.now())
         })
 
         return () => {
@@ -72,8 +70,18 @@ const SidebarChat = ( props ) => {
         )
     }
 
+    const myFunc = () => {
+        if (window.innerWidth < 712) {
+            const side = document.querySelector('.sidebar')
+            side.style.display = "none"      
+        }
+
+        setRoute(route+1)
+
+    }
+
     return (
-        <Link className="link" onClick={() => setRoute(route+1)} to={`/chat/${contact._id}`}>
+        <Link className="link" onClick={myFunc} to={`/chat/${contact._id}`}>
             <div className="sidebarChat">
                 <div className="sidebarChat__avatar">
                     <Avatar src={chatDisplayDetails.avatar}/>

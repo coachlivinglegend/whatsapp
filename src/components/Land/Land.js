@@ -13,6 +13,8 @@ const Land = () => {
     const showChat = () => {
         const side = document.querySelector('.sidebar')
         const land = document.querySelector('.land')
+        // const chat = document.querySelector('.chat')
+        // chat.style.display = "none"
         land.style.display = "none"
         side.style.display = "flex"
         side.style.flex = 1

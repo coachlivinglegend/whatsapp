@@ -59,6 +59,10 @@
     
 }
 
+.login__button:hover {
+    cursor: pointer;
+}
+
 .login__button > div{
     text-align: center;
 }
