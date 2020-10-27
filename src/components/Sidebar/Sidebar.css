@@ -5,7 +5,7 @@
     border-right: 1px solid lightgray;
     position: relative;
     z-index: 5;
-    /* min-width: 255px; */
+    min-width: 255px;
 }
 
 @media only screen and (max-width: 712px) {
@@ -124,10 +124,11 @@
 }
 
 .sidebar__chats{
-    flex: 1;
+    /* flex: 1; */
     background-color: white;
     overflow-y: auto;
     overflow-x: hidden;
+    max-width: 420px;
 }
 
 .sidebar__profile{
@@ -140,6 +141,7 @@
     display: none;
     flex-direction: column;
     transition: .5s;
+    background-color: #ededed;
 }
 
 .sidebar__profile > * {
@@ -212,12 +214,13 @@
     background-color: #ededed;
     color: gray;
     padding: 10px 20px 20px 20px;
+    margin-bottom: auto;
 }
 
 .profile__base{
     height: 62px;
     background-color: #ededed;
-    margin-top: auto;
+    /* margin-top: auto; */
 }
 
 .profile__base > .login__button{
